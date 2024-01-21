@@ -1,0 +1,14 @@
+[[pages]]
+path = "app.py"
+name = "Список криптопортфелей"
+icon = ":basketball:"
+
+[[pages]]
+path = "pages/portfolioInfo.py"
+name = "Информация о портфеле"
+icon = ":question:"
+
+[[pages]]
+path = "pages/about.py"
+name = "О программе"
+icon = ":question:"

@@ -1,8 +1,20 @@
+from typing import List
+
 from Repository import AssetRepository
 from Repository.SessionContext import SessionContext
 from Repository.db_uniswap import Portfolio as Portfolio_DB, AssetInPortfolio as AssetInPortfolio_DB
 from Domain.Portfolio import Portfolio, PortfolioElement
 from Domain.Assets import Asset
+
+
+def get_all_portfolios():
+    with SessionContext() as session:
+        portfolios_db = session.query(Portfolio_DB).all()
+        portfolios = []
+        for row in portfolios_db:
+            portfolios.append(Portfolio(name=row.name, numeraire=row.numeraire,
+                              purchase_period=row.purchase_period.name))
+    return portfolios
 
 
 def get_portfolio(portfolio_name):
@@ -31,7 +43,3 @@ def _get_portfolio_element(portfolio_name):
                                                  volume=element.AssetInPortfolio.volume)
             portfolio_elements.append(portfolio_element)
     return portfolio_elements
-
-
-def _get_portfolio_element_transactions(portfolio: Portfolio):
-    return None

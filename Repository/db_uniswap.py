@@ -16,6 +16,28 @@ class Asset(Base):
     load_prices = Column(Boolean)
 
 
+class AssetDailyUsdPrice(Base):
+    __tablename__ = 'asset_daily_usd_price'
+
+    id = Column(Integer, primary_key=True)
+    asset_id = Column(ForeignKey('asset.id'))
+    price = Column(Numeric)
+    ts = Column(DateTime)
+
+    asset = relationship('Asset')
+
+
+class AssetDailyWethPrice(Base):
+    __tablename__ = 'asset_daily_weth_price'
+
+    id = Column(Integer, primary_key=True)
+    asset_id = Column(ForeignKey('asset.id'))
+    price = Column(Numeric)
+    ts = Column(DateTime)
+
+    asset = relationship('Asset')
+
+
 class PurchasePeriod(Base):
     __tablename__ = 'purchase_period'
 
