@@ -1,6 +1,5 @@
 import pandas as pd
 
-from Domain.Portfolio import PortfolioElementTransaction
 from Repository import PortfolioRepository, AssetRepository
 
 
