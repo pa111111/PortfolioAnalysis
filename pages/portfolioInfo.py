@@ -5,7 +5,7 @@ from st_aggrid import AgGrid
 
 from Service import PortfolioManager
 
-st.title('Информация о криптопортфеле')
+st.title('About portfolios')
 
 
 def get_portfolios():
@@ -44,9 +44,9 @@ def show_aggrid(df):
     AgGrid(df)
 
 
-portfolio_name = st.selectbox('Выберите криптопортфель', get_portfolios()['Name'])
+portfolio_name = st.selectbox('Select portfolio', get_portfolios()['Name'])
 
-st.markdown('Список активов в криптопортфеле: '+portfolio_name)
+st.markdown('List of cryptocurrency in portfolio: '+portfolio_name)
 show_aggrid(get_portfolio_elements(portfolio_name))
-st.markdown('Список транзакций')
+st.markdown('List of emulated transactions')
 show_aggrid(PortfolioManager.emulate_portfolio_element_transactions(portfolio_name))

@@ -9,7 +9,8 @@ def emulate_portfolio_element_transactions(portfolio_name):
     for element in portfolio.get_portfolio_elements():
         investment_amount = element.volume
         frequency = _get_frequency(portfolio.purchase_period)
-        df_prices = AssetRepository.get_asset_daily_prices(element.asset, portfolio.numeraire)
+        df_prices = AssetRepository.get_asset_daily_prices(element.asset, portfolio.numeraire, element.period_start,
+                                                           element.period_end)
         for date in pd.date_range(element.period_start, element.period_end, freq=frequency):
             price = df_prices[df_prices['ts'] == date]['price'].values[0]
             transactions_list.append([element.asset.symbol, date, price,
