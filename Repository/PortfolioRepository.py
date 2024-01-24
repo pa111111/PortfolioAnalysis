@@ -4,7 +4,6 @@ from Repository import AssetRepository
 from Repository.SessionContext import SessionContext
 from Repository.db_uniswap import Portfolio as Portfolio_DB, AssetInPortfolio as AssetInPortfolio_DB
 from Domain.Portfolio import Portfolio, PortfolioElement
-from Domain.Assets import Asset
 
 
 def get_all_portfolios():

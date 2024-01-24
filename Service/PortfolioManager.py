@@ -1,5 +1,4 @@
 import pandas as pd
-
 from Repository import PortfolioRepository, AssetRepository
 
 
