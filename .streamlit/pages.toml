@@ -2,6 +2,7 @@
 path = "app.py"
 name = "List of portfolios"
 icon = ":basketball:"
+is_section = true
 
 [[pages]]
 path = "pages/portfolioInfo.py"

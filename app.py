@@ -8,7 +8,7 @@ st.set_page_config(layout='wide')
 show_pages_from_config(".streamlit/pages.toml")
 
 # Streamlit commands to display the web app
-st.title('Список криптопортфелей')
+st.title('List of portfolios')
 
 
 def get_portfolios():
