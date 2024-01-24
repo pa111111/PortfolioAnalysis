@@ -1,14 +1,14 @@
 [[pages]]
 path = "app.py"
-name = "Список криптопортфелей"
+name = "List of portfolios"
 icon = ":basketball:"
 
 [[pages]]
 path = "pages/portfolioInfo.py"
-name = "Информация о портфеле"
+name = "Information of portfolio"
 icon = ":question:"
 
 [[pages]]
 path = "pages/about.py"
-name = "О программе"
+name = "About program"
 icon = ":question:"
