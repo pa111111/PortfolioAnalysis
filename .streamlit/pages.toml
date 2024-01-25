@@ -7,7 +7,7 @@ is_section = true
 [[pages]]
 path = "pages/portfolioInfo.py"
 name = "Information of portfolio"
-icon = ":question:"
+icon = "📖"
 
 [[pages]]
 path = "pages/about.py"
