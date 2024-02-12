@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import streamlit as st
+import toml
 
-user = st.secrets["database"]["user"]
-password = st.secrets["database"]["password"]
-host = st.secrets["database"]["host"]
-port = st.secrets["database"]["port"]
-dbname = st.secrets["database"]["dbname"]
+parsed_toml = toml.load("Repository/secrets.toml")
+user = parsed_toml["user"]
+password = parsed_toml["password"]
+host = parsed_toml["host"]
+port = parsed_toml["port"]
+dbname = parsed_toml["dbname"]
 
 
 class SessionContext:
