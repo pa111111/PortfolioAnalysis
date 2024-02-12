@@ -5,7 +5,7 @@ from st_aggrid import AgGrid
 from st_pages import Page, Section, add_page_title, show_pages, show_pages_from_config
 
 st.set_page_config(layout='wide')
-show_pages_from_config(".streamlit/pages.toml")
+show_pages_from_config(".streamlit/pages_streamlit.toml")
 
 # Streamlit commands to display the web app
 st.title('List of portfolios')

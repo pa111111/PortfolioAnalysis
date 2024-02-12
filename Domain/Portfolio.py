@@ -4,14 +4,7 @@ from datetime import datetime
 from pyarrow import timestamp
 from Domain.Assets import Asset
 from typing import List
-
-
-@dataclass
-class PortfolioElementTransaction:
-    ts: datetime
-    price: decimal
-    coins_bought: decimal
-    investment_amount: decimal
+import pandas as pd
 
 
 @dataclass
@@ -20,13 +13,14 @@ class PortfolioElement:
     period_start: datetime
     period_end: datetime
     volume: decimal
-    _transactions = List[PortfolioElementTransaction]
 
-    def add_transaction(self, transaction):
-        self._transactions.append(transaction)
-
-    def get_transactions(self):
-        return self._transactions
+    def to_dict(self):
+        return {
+            'symbol': self.asset.symbol,
+            'period_start': self.period_start,
+            'period_end': self.period_end,
+            'volume': self.volume
+        }
 
 
 @dataclass
@@ -41,5 +35,13 @@ class Portfolio:
 
     def get_portfolio_elements(self):
         return self._portfolio_elements
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'numeraire': self.numeraire,
+            'purchase_period': self.purchase_period
+        }
+
 
 

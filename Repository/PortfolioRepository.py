@@ -1,11 +1,11 @@
-from typing import List
-
+from Utils import Cache_utils
 from Repository import AssetRepository
 from Repository.SessionContext import SessionContext
 from Repository.db_uniswap import Portfolio as Portfolio_DB, AssetInPortfolio as AssetInPortfolio_DB
 from Domain.Portfolio import Portfolio, PortfolioElement
 
 
+@Cache_utils.cache_it
 def get_all_portfolios():
     with SessionContext() as session:
         portfolios_db = session.query(Portfolio_DB).all()
@@ -16,6 +16,7 @@ def get_all_portfolios():
     return portfolios
 
 
+@Cache_utils.cache_it
 def get_portfolio(portfolio_name):
     with SessionContext() as session:
         portfolio_db = session.query(Portfolio_DB).filter_by(name=portfolio_name).first()
@@ -28,6 +29,7 @@ def get_portfolio(portfolio_name):
     return portfolio
 
 
+@Cache_utils.cache_it
 def _get_portfolio_element(portfolio_name):
     with SessionContext() as session:
         elements_db = session.query(Portfolio_DB, AssetInPortfolio_DB) \
