@@ -16,8 +16,6 @@ portfolios_df = PortfolioManager.get_all_portfolios()
 # добавляем столбец со ссылкой на portfolio_analysis.py
 portfolios_df['Analysis Link'] = portfolios_df['name'].apply(lambda x: create_analysis_link(x))
 
-portfolio_elements_df = pd.DataFrame(columns=['symbol', 'period_start', 'period_end', 'volume'])
-
 # Макет приложения
 layout = html.Div([
     dcc.Store(id='memory_store'),
@@ -42,12 +40,14 @@ layout = html.Div([
     ),
     # Заголовок для второй таблицы
     html.H2("List of portfolio assets"),
-
-    # Таблица для списка активов портфолио
     dash_table.DataTable(
         id='tbl_portfolio_elements',
-        columns=[{"name": i, "id": i} for i in portfolio_elements_df.columns],
-        data=portfolio_elements_df.to_dict('records'),
+        columns=[
+            {'id': 'symbol', 'name': 'Актив'},
+            {'id': 'period_start', 'name': 'Начало закупки'},
+            {'id': 'period_end', 'name': 'Окончание закупки'},
+            {'id': 'volume', 'name': 'Объем закупки'}
+        ],
         sort_action='native',  # Включает сортировку по столбцам
         style_header={'backgroundColor': '#305D91', 'padding': '10px', 'color': '#FFFFFF', 'font-weight': 'bold',
                       'text-align': 'center'},
@@ -56,15 +56,39 @@ layout = html.Div([
         fill_width=False
     ),
     html.H2("Cumulative portfolio trades"),
-
+    dash_table.DataTable(
+        id='tbl_cumulative_portfolio_trades',
+        columns=[{'id': col, 'name': col} for col in ['Symbol', 'Date', 'Price', 'Coins_bought', 'Investment_amount',
+                                                      'Cumulative_investment_by_asset',
+                                                      'Cumulative_coins_bought_by_asset', 'Current_value_by_asset',
+                                                      'Profit_loss_by_asset', 'Profit_loss_percent_by_asset']],
+        sort_action='native',  # Включает сортировку по столбцам
+        style_header={'backgroundColor': '#305D91', 'padding': '10px', 'color': '#FFFFFF', 'font-weight': 'bold',
+                      'text-align': 'center'},
+        style_data={'text-align': 'left'},
+        style_cell={'min-width': '1px'},
+        fill_width=False
+    ),
     html.H2("Portfolio summary"),
+    dash_table.DataTable(
+        id='tbl_portfolio_summary',
+        columns=[{'id': col, 'name': col} for col in
+                 ['Date', 'Total_Current_Value', 'Total_Investment', 'Total_Profit_Loss',
+                  'Total_Profit_Loss_Percent']],
+        sort_action='native',  # Включает сортировку по столбцам
+        style_header={'backgroundColor': '#305D91', 'padding': '10px', 'color': '#FFFFFF', 'font-weight': 'bold',
+                      'text-align': 'center'},
+        style_data={'text-align': 'left'},
+        style_cell={'min-width': '1px'},
+        fill_width=False
+    )
 ])
 
 
 # Сохраняем в store portfolio_name
 @app.callback(Output('memory_store', 'data'),
-     [Input('tbl_portfolios', 'derived_virtual_data'),
-      Input('tbl_portfolios', 'selected_rows')])
+              [Input('tbl_portfolios', 'derived_virtual_data'),
+               Input('tbl_portfolios', 'selected_rows')])
 def select_portfolio(all_rows_data, selected_rows):
     if selected_rows and all_rows_data:
         selected_row_index = selected_rows[0]
@@ -73,25 +97,27 @@ def select_portfolio(all_rows_data, selected_rows):
         return portfolio_name
     return ''
 
+
 @app.callback(Output('tbl_portfolio_elements', 'data'),
               Input('memory_store', 'data'))
 def fill_portfolio_elements(data):
-    elements_data = PortfolioManager.get_portfolio_elements(data)
-    return elements_data.to_dict('records')
+    if data != '':
+        elements_data = PortfolioManager.get_portfolio_elements(data)
+        return elements_data.to_dict('records')
+    return None
 
 
-# @app.callback(
-#     Output('table-portfolio-elements', 'data'),
-#     [Input('table-portfolios', 'derived_virtual_data'),
-#      Input('table-portfolios', 'selected_rows')]
-# )
-# def update_elements(all_rows_data, selected_rows):
-#     if selected_rows and all_rows_data:
-#         selected_row_index = selected_rows[0]
-#         selected_row_data = all_rows_data[selected_row_index]
-#         portfolio_name = selected_row_data['name']
-#
-#         # Теперь получаем данные элементов портфеля, используя выбранное имя портфеля
-#         elements_data = PortfolioManager.get_portfolio_elements(portfolio_name)
-#         return elements_data.to_dict('records')
-#     return []
+@app.callback(Output('tbl_cumulative_portfolio_trades', 'data'),
+              Input('memory_store', 'data'))
+def fill_cumulative_portfolio_trades(data):
+    if data != '':
+        return PortfolioManager.get_cumulative_portfolio_info(data).to_dict('records')
+    return None
+
+
+@app.callback(Output('tbl_portfolio_summary', 'data'),
+              Input('memory_store', 'data'))
+def fill_portfolio_summary(data):
+    if data != '':
+        return PortfolioManager.get_portfolio_summary(data).to_dict('records')
+    return None

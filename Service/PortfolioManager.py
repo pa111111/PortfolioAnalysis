@@ -11,7 +11,7 @@ def get_all_portfolios():
 
 
 def get_portfolio_elements(portfolio_name):
-    portfolio_elements = PortfolioRepository.get_portfolio(portfolio_name).get_portfolio_elements()
+    portfolio_elements = PortfolioRepository.get_portfolio_elements(portfolio_name)
     elements_dicts = [element.to_dict() for element in portfolio_elements]
     return pd.DataFrame(elements_dicts)
 
@@ -19,7 +19,8 @@ def get_portfolio_elements(portfolio_name):
 def emulate_portfolio_element_transactions(portfolio_name):
     transactions_list = []
     portfolio = PortfolioRepository.get_portfolio(portfolio_name)
-    for element in portfolio.get_portfolio_elements():
+    portfolio_elements = PortfolioRepository.get_portfolio_elements(portfolio_name)
+    for element in portfolio_elements:
         investment_amount = element.volume
         frequency = _get_frequency(portfolio.purchase_period)
         df_prices = AssetRepository.get_asset_daily_prices(element.asset, portfolio.numeraire, element.period_start,
@@ -33,7 +34,7 @@ def emulate_portfolio_element_transactions(portfolio_name):
 
 
 @Cache_utils.cache_it
-def cumulative_portfolio_info(portfolio_name):
+def get_cumulative_portfolio_info(portfolio_name):
     transactions_df = emulate_portfolio_element_transactions(portfolio_name).copy()
     # Убедимся, что 'Date' в правильном формате и отсортировано
     transactions_df.sort_values(['Symbol', 'Date'], inplace=True)
@@ -51,8 +52,8 @@ def cumulative_portfolio_info(portfolio_name):
     return transactions_df
 
 
-def portfolio_summary(portfolio_name):
-    cumulative_portfolio_df = cumulative_portfolio_info(portfolio_name).copy()
+def get_portfolio_summary(portfolio_name):
+    cumulative_portfolio_df = get_cumulative_portfolio_info(portfolio_name).copy()
     # Суммирование по портфелю
     total_current_value = cumulative_portfolio_df.groupby('Date')['Current_value_by_asset'].sum()
     total_investment = cumulative_portfolio_df.groupby('Date')['Cumulative_investment_by_asset'].sum()

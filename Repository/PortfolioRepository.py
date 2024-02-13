@@ -22,15 +22,11 @@ def get_portfolio(portfolio_name):
         portfolio_db = session.query(Portfolio_DB).filter_by(name=portfolio_name).first()
         portfolio = Portfolio(name=portfolio_db.name, numeraire=portfolio_db.numeraire,
                               purchase_period=portfolio_db.purchase_period.name)
-
-        for element in _get_portfolio_element(portfolio.name):
-            portfolio.add_portfolio_element(element)
-
     return portfolio
 
 
 @Cache_utils.cache_it
-def _get_portfolio_element(portfolio_name):
+def get_portfolio_elements(portfolio_name):
     with SessionContext() as session:
         elements_db = session.query(Portfolio_DB, AssetInPortfolio_DB) \
             .join(Portfolio_DB, Portfolio_DB.id == AssetInPortfolio_DB.portfolio_id).filter_by(
